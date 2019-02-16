@@ -1,33 +1,7 @@
-const apiUrl = 'http://localhost:8012/url-shortener-backend/public/';
+import React, { Component } from 'react';
+import Notification from './Notification';
 
-const LinkList = (props) => {
-    const links = props.links;
-    const listItems = links.map((link) =>
-        <li key={link.id.toString()}>
-            {link.url}
-        </li>
-    );
-
-    return (
-        <React.Fragment>
-            <h2>Top 100 most frequently accessed URLs</h2>
-
-            <ol>{listItems}</ol> 
-        </React.Fragment>
-    );
-}
-
-const Notification = (props) => {
-    if (!props.show) {
-        return null;
-    }
-
-    return (
-        <p>All done! Here is your short URL: <a target="_blank" href={props.url}>{props.url}</a></p>
-    );
-}
-
-class Form extends React.Component {
+class Form extends Component {
     state = {
         value: '',
         url: '',
@@ -39,7 +13,7 @@ class Form extends React.Component {
     }
 
     handleSubmit = (event) => {
-        fetch(apiUrl + 'api/v1/links', {
+        fetch('http://localhost:8012/url-shortener-backend/public/api/v1/links', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -83,36 +57,4 @@ class Form extends React.Component {
     }
 }
 
-class App extends React.Component {
-    state = {
-        links: []
-    };
-
-    componentDidMount() {
-        fetch(apiUrl + 'api/v1/links')
-        .then(response => response.json())
-        .then(responseData => {
-            this.setState({ links: responseData.data });
-        })
-        .catch(error => {
-            console.log('Error fetching and parsing data', error);
-        });
-    }
-
-    render() {
-        return (
-            <div className="container">
-                <h1 className="title">Shorten a URL.</h1>
-
-                <Form />
-
-                <LinkList links={this.state.links} />
-            </div>
-        );
-    }
-}
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+export default Form;
